@@ -14,8 +14,10 @@ import getMaxScroll from '../get-max-scroll';
 import getSubject from './util/get-subject';
 
 export type Closest = {|
-  client: BoxModel,
-  page: BoxModel,
+  clientX: BoxModel,
+  clientY: BoxModel,
+  pageX: BoxModel,
+  pageY: BoxModel,
   scroll: Position,
   scrollSize: ScrollSize,
   shouldClipSubject: boolean,
@@ -27,9 +29,11 @@ type Args = {|
   isCombineEnabled: boolean,
   isFixedOnPage: boolean,
   direction: 'vertical' | 'horizontal',
-  client: BoxModel,
+  clientX: BoxModel,
+  clientY: BoxModel,
   // is null when in a fixed container
-  page: BoxModel,
+  pageX: BoxModel,
+  pageY: BoxModel,
   closest?: ?Closest,
 |};
 
@@ -39,8 +43,10 @@ export default ({
   isCombineEnabled,
   isFixedOnPage,
   direction,
-  client,
-  page,
+  clientX,
+  clientY,
+  pageX,
+  pageY,
   closest,
 }: Args): DroppableDimension => {
   const frame: ?Scrollable = (() => {
@@ -48,20 +54,26 @@ export default ({
       return null;
     }
 
-    const { scrollSize, client: frameClient } = closest;
+    const {
+      scrollSize,
+      clientX: frameClientX,
+      clientY: frameClientY,
+    } = closest;
 
     // scrollHeight and scrollWidth are based on the padding box
     // https://developer.mozilla.org/en-US/docs/Web/API/Element/scrollHeight
     const maxScroll: Position = getMaxScroll({
       scrollHeight: scrollSize.scrollHeight,
       scrollWidth: scrollSize.scrollWidth,
-      height: frameClient.paddingBox.height,
-      width: frameClient.paddingBox.width,
+      height: frameClientY.paddingBox.height,
+      width: frameClientX.paddingBox.width,
     });
 
     return {
-      pageMarginBox: closest.page.marginBox,
-      frameClient,
+      pageXMarginBox: closest.pageX.marginBox,
+      pageYMarginBox: closest.pageY.marginBox,
+      frameClientX,
+      frameClientY,
       scrollSize,
       shouldClipSubject: closest.shouldClipSubject,
       scroll: {
@@ -79,7 +91,8 @@ export default ({
   const axis: Axis = direction === 'vertical' ? vertical : horizontal;
 
   const subject: DroppableSubject = getSubject({
-    page,
+    pageX,
+    pageY,
     withPlaceholder: null,
     axis,
     frame,
@@ -91,8 +104,10 @@ export default ({
     isFixedOnPage,
     axis,
     isEnabled,
-    client,
-    page,
+    clientX,
+    clientY,
+    pageX,
+    pageY,
     frame,
     subject,
   };

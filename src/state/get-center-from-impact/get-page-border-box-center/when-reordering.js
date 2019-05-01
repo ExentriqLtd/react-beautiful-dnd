@@ -42,7 +42,8 @@ export default ({
   if (!insideDestination.length) {
     return goIntoStart({
       axis,
-      moveInto: droppable.page,
+      moveIntoX: droppable.pageX,
+      moveIntoY: droppable.pageY,
       isMoving: draggablePage,
     });
   }

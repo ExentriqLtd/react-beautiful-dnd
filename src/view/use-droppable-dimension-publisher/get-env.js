@@ -2,7 +2,8 @@
 import getClosestScrollable from './get-closest-scrollable';
 
 export type Env = {|
-  closestScrollable: ?Element,
+  closestScrollableX: ?Element,
+  closestScrollableY: ?Element,
   isFixedOnPage: boolean,
 |};
 
@@ -21,11 +22,15 @@ const getIsFixed = (el: ?Element): boolean => {
 };
 
 export default (start: Element): Env => {
-  const closestScrollable: ?Element = getClosestScrollable(start);
+  const closestScrollableX: ?Element =
+    getClosestScrollable(start, 'x') || getClosestScrollable(start, 'y');
+  const closestScrollableY: ?Element =
+    getClosestScrollable(start, 'y') || getClosestScrollable(start, 'x');
   const isFixedOnPage: boolean = getIsFixed(start);
 
   return {
-    closestScrollable,
+    closestScrollableX,
+    closestScrollableY,
     isFixedOnPage,
   };
 };

@@ -10,7 +10,8 @@ const clean = apply((value: number) => (value === 0 ? 0 : value));
 
 type Args = {|
   dragStartTime: number,
-  container: Rect,
+  containerX: Rect,
+  containerY: Rect,
   subject: Rect,
   center: Position,
   shouldUseTimeDampening: boolean,
@@ -18,17 +19,18 @@ type Args = {|
 
 export default ({
   dragStartTime,
-  container,
+  containerX,
+  containerY,
   subject,
   center,
   shouldUseTimeDampening,
 }: Args): ?Position => {
   // get distance to each edge
   const distanceToEdges: Spacing = {
-    top: center.y - container.top,
-    right: container.right - center.x,
-    bottom: container.bottom - center.y,
-    left: center.x - container.left,
+    top: center.y - containerY.top,
+    right: containerX.right - center.x,
+    bottom: containerY.bottom - center.y,
+    left: center.x - containerX.left,
   };
 
   // 1. Figure out which x,y values are the best target
@@ -40,14 +42,14 @@ export default ({
   // Maximum speed value should be hit before the distance is 0
   // Negative values to not continue to increase the speed
   const y: number = getScrollOnAxis({
-    container,
+    container: containerY,
     distanceToEdges,
     dragStartTime,
     axis: vertical,
     shouldUseTimeDampening,
   });
   const x: number = getScrollOnAxis({
-    container,
+    container: containerX,
     distanceToEdges,
     dragStartTime,
     axis: horizontal,
@@ -63,7 +65,8 @@ export default ({
 
   // need to not scroll in a direction that we are too big to scroll in
   const limited: ?Position = adjustForSizeLimits({
-    container,
+    containerX,
+    containerY,
     subject,
     proposedScroll: required,
   });

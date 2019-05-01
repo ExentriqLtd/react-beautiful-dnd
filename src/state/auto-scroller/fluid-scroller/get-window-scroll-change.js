@@ -21,7 +21,8 @@ export default ({
 }: Args): ?Position => {
   const scroll: ?Position = getScroll({
     dragStartTime,
-    container: viewport.frame,
+    containerX: viewport.frame,
+    containerY: viewport.frame,
     subject,
     center,
     shouldUseTimeDampening,

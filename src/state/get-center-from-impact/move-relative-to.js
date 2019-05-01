@@ -48,19 +48,25 @@ export const goBefore = ({ axis, moveRelativeTo, isMoving }: Args): Position =>
   );
 type GoIntoArgs = {|
   axis: Axis,
-  moveInto: BoxModel,
+  moveIntoY: BoxModel,
+  moveIntoX: BoxModel,
   isMoving: BoxModel,
 |};
 
 // moves into the content box
 export const goIntoStart = ({
   axis,
-  moveInto,
+  moveIntoX,
+  moveIntoY,
   isMoving,
 }: GoIntoArgs): Position =>
   patch(
     axis.line,
-    moveInto.contentBox[axis.start] +
+    (axis.line === 'x' ? moveIntoX : moveIntoY).contentBox[axis.start] +
       distanceFromStartToBorderBoxCenter(axis, isMoving),
-    getCrossAxisBorderBoxCenter(axis, moveInto.contentBox, isMoving),
+    getCrossAxisBorderBoxCenter(
+      axis,
+      (axis.line === 'x' ? moveIntoX : moveIntoY).contentBox,
+      isMoving,
+    ),
   );

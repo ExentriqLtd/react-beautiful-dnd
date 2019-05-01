@@ -2,6 +2,7 @@
 import invariant from 'tiny-invariant';
 import { warning } from '../../dev-warning';
 import getBodyElement from '../get-body-element';
+import type { Axis } from './type';
 
 type Overflow = {|
   overflowX: string,
@@ -12,24 +13,24 @@ const isEqual = (base: string) => (value: string): boolean => base === value;
 const isScroll = isEqual('scroll');
 const isAuto = isEqual('auto');
 const isVisible = isEqual('visible');
-const isEither = (overflow: Overflow, fn: (value: string) => boolean) =>
-  fn(overflow.overflowX) || fn(overflow.overflowY);
+// const isEither = (overflow: Overflow, fn: (value: string) => boolean) =>
+//   fn(overflow.overflowX) || fn(overflow.overflowY);
 const isBoth = (overflow: Overflow, fn: (value: string) => boolean) =>
   fn(overflow.overflowX) && fn(overflow.overflowY);
 
-const isElementScrollable = (el: Element): boolean => {
+const isElementScrollable = (el: Element, axis: Axis): boolean => {
   const style: CSSStyleDeclaration = window.getComputedStyle(el);
-  const overflow: Overflow = {
+  const overflowD: Overflow = {
     overflowX: style.overflowX,
     overflowY: style.overflowY,
   };
-
-  return isEither(overflow, isScroll) || isEither(overflow, isAuto);
+  const overflow = overflowD[`overflow${axis.toUpperCase()}`];
+  return isScroll(overflow) || isAuto(overflow);
 };
 
 // Special case for a body element
 // Playground: https://codepen.io/alexreardon/pen/ZmyLgX?editors=1111
-const isBodyScrollable = (): boolean => {
+const isBodyScrollable = (axis: Axis): boolean => {
   // Because we always return false for now, we can skip any actual processing in production
   if (process.env.NODE_ENV === 'production') {
     return false;
@@ -40,7 +41,7 @@ const isBodyScrollable = (): boolean => {
   invariant(html);
 
   // 1. The `body` has `overflow-[x|y]: auto | scroll`
-  if (!isElementScrollable(body)) {
+  if (!isElementScrollable(body, axis)) {
     return false;
   }
 
@@ -67,7 +68,7 @@ const isBodyScrollable = (): boolean => {
   return false;
 };
 
-const getClosestScrollable = (el: ?Element): ?Element => {
+const getClosestScrollable = (el: ?Element, axis: Axis): ?Element => {
   // cannot do anything else!
   if (el == null) {
     return null;
@@ -75,7 +76,7 @@ const getClosestScrollable = (el: ?Element): ?Element => {
 
   // not allowing us to go higher then body
   if (el === document.body) {
-    return isBodyScrollable() ? el : null;
+    return isBodyScrollable(axis) ? el : null;
   }
 
   // Should never get here, but just being safe
@@ -83,9 +84,9 @@ const getClosestScrollable = (el: ?Element): ?Element => {
     return null;
   }
 
-  if (!isElementScrollable(el)) {
+  if (!isElementScrollable(el, axis)) {
     // keep recursing
-    return getClosestScrollable(el.parentElement);
+    return getClosestScrollable(el.parentElement, axis);
   }
 
   // success!

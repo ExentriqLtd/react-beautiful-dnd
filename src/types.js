@@ -90,9 +90,11 @@ export type DraggableDimension = {|
 export type Scrollable = {|
   // This is the window through which the droppable is observed
   // It does not change during a drag
-  pageMarginBox: Rect,
+  pageXMarginBox: Rect,
+  pageYMarginBox: Rect,
   // Used for comparision with dynamic recollecting
-  frameClient: BoxModel,
+  frameClientX: BoxModel,
+  frameClientY: BoxModel,
   scrollSize: ScrollSize,
   // Whether or not we should clip the subject by the frame
   // Is controlled by the ignoreContainerClipping prop
@@ -112,7 +114,8 @@ export type PlaceholderInSubject = {|
 
 export type DroppableSubject = {|
   // raw, unchanging
-  page: BoxModel,
+  pageX: BoxModel,
+  pageY: BoxModel,
   withPlaceholder: ?PlaceholderInSubject,
   // The hitbox for a droppable
   // - page margin box
@@ -129,11 +132,13 @@ export type DroppableDimension = {|
   isEnabled: boolean,
   isCombineEnabled: boolean,
   // relative to the current viewport
-  client: BoxModel,
+  clientX: BoxModel,
+  clientY: BoxModel,
   // relative to the whole page
   isFixedOnPage: boolean,
   // relative to the page
-  page: BoxModel,
+  pageX: BoxModel,
+  pageY: BoxModel,
   // The container of the droppable
   frame: ?Scrollable,
   // what is visible through the frame

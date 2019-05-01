@@ -38,7 +38,11 @@ const getScrollableDroppableOver = (
     getScrollableDroppables(droppables),
     (droppable: DroppableDimension): boolean => {
       invariant(droppable.frame, 'Invalid result');
-      return isPositionInFrame(droppable.frame.pageMarginBox)(target);
+      // const pos1 = isPositionInFrame(droppable.frame.pageXMarginBox)(target);
+      const frame = droppable.frame;
+      const pos1 = isPositionInFrame(frame.pageXMarginBox)(target);
+      const pos2 = isPositionInFrame(frame.pageYMarginBox)(target);
+      return pos1 && pos2;
     },
   );
 

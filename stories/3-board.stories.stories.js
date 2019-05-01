@@ -17,7 +17,7 @@ storiesOf('board', module)
     <Board initial={data.medium} containerHeight="60vh" />
   ))
   .add('scrollable columns', () => (
-    <Board initial={authorQuoteMap} withScrollableColumns />
+    <Board initial={data.large} withScrollableColumns />
   ))
   .add('with combine enabled', () => (
     <Board initial={authorQuoteMap} isCombineEnabled />

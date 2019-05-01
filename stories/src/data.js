@@ -50,7 +50,46 @@ const princess: Author = {
   },
 };
 
-export const authors: Author[] = [jake, BMO, finn, princess];
+const princess2: Author = {
+  id: '5',
+  name: 'Princess bubblegum2',
+  url: 'http://adventuretime.wikia.com/wiki/Princess_Bubblegum',
+  avatarUrl: princessImg,
+  colors: {
+    soft: colors.P50,
+    hard: colors.P200,
+  },
+};
+const princess3: Author = {
+  id: '6',
+  name: 'Princess bubblegum3',
+  url: 'http://adventuretime.wikia.com/wiki/Princess_Bubblegum',
+  avatarUrl: princessImg,
+  colors: {
+    soft: colors.P50,
+    hard: colors.P200,
+  },
+};
+const princess4: Author = {
+  id: '7',
+  name: 'Princess bubblegum4',
+  url: 'http://adventuretime.wikia.com/wiki/Princess_Bubblegum',
+  avatarUrl: princessImg,
+  colors: {
+    soft: colors.P50,
+    hard: colors.P200,
+  },
+};
+
+export const authors: Author[] = [
+  jake,
+  BMO,
+  finn,
+  princess,
+  princess2,
+  princess3,
+  princess4,
+];
 
 export const quotes: Quote[] = [
   {

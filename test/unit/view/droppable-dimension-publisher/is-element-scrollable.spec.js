@@ -8,7 +8,8 @@ it('should return true if an element has overflow:auto or overflow:scroll', () =
       const el: HTMLElement = document.createElement('div');
       // $ExpectError - flow being mean
       el.style[overflow] = value;
-      expect(getClosestScrollable(el)).toBe(el);
+      expect(getClosestScrollable(el, 'x')).toBe(el);
+      expect(getClosestScrollable(el, 'y')).toBe(el);
     });
   });
 });
@@ -18,7 +19,8 @@ it('should return false if an element has overflow:visible', () => {
     const el: HTMLElement = document.createElement('div');
     // $ExpectError - flow being mean
     el.style[overflow] = 'visible';
-    expect(getClosestScrollable(el)).toBe(null);
+    expect(getClosestScrollable(el, 'x')).toBe(null);
+    expect(getClosestScrollable(el, 'y')).toBe(null);
   });
 });
 
@@ -60,20 +62,23 @@ describe('body detection', () => {
     body.style.overflowX = 'auto';
     html.style.overflowY = 'auto';
 
-    expect(getClosestScrollable(body)).toBe(null);
+    expect(getClosestScrollable(body, 'x')).toBe(null);
+    expect(getClosestScrollable(body, 'y')).toBe(null);
     expect(console.warn).toHaveBeenCalled();
   });
 
   it('should not mark the body as a scroll container if it does not have any overflow set', () => {
     body.style.overflowX = 'visible';
-    expect(getClosestScrollable(body)).toBe(null);
+    expect(getClosestScrollable(body, 'x')).toBe(null);
+    expect(getClosestScrollable(body, 'y')).toBe(null);
     expect(console.warn).not.toHaveBeenCalled();
   });
 
   it('should not mark the body as a scroll container if the html element has visible overflow', () => {
     body.style.overflowX = 'auto';
     html.style.overflowY = 'visible';
-    expect(getClosestScrollable(body)).toBe(null);
+    expect(getClosestScrollable(body, 'x')).toBe(null);
+    expect(getClosestScrollable(body, 'y')).toBe(null);
     expect(console.warn).not.toHaveBeenCalled();
   });
 });

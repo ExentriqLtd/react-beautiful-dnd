@@ -24,7 +24,7 @@ const getRequiredGrowthForPlaceholder = (
   const axis: Axis = droppable.axis;
   // TODO: consider margin collapsing?
   // Using contentBox as that is where the Draggables will sit
-  const availableSpace: number = droppable.subject.page.contentBox[axis.size];
+  const availableSpace: number = droppable.subject[`page${axis.line.toUpperCase()}`].contentBox[axis.size];
   const insideDroppable: DraggableDimension[] = getDraggablesInsideDroppable(
     droppable.descriptor.id,
     draggables,
@@ -89,7 +89,8 @@ export const addPlaceholder = (
 
   if (!frame) {
     const subject: DroppableSubject = getSubject({
-      page: droppable.subject.page,
+      pageX: droppable.subject.pageX,
+      pageY: droppable.subject.pageY,
       withPlaceholder: added,
       axis: droppable.axis,
       frame: droppable.frame,
@@ -107,7 +108,8 @@ export const addPlaceholder = (
   const newFrame: Scrollable = withMaxScroll(frame, maxScroll);
 
   const subject: DroppableSubject = getSubject({
-    page: droppable.subject.page,
+    pageX: droppable.subject.pageX,
+    pageY: droppable.subject.pageY,
     withPlaceholder: added,
     axis: droppable.axis,
     frame: newFrame,
@@ -132,7 +134,8 @@ export const removePlaceholder = (
 
   if (!frame) {
     const subject: DroppableSubject = getSubject({
-      page: droppable.subject.page,
+      pageX: droppable.subject.pageX,
+      pageY: droppable.subject.pageY,
       axis: droppable.axis,
       frame: null,
       // cleared
@@ -153,7 +156,8 @@ export const removePlaceholder = (
   const newFrame: Scrollable = withMaxScroll(frame, oldMaxScroll);
 
   const subject: DroppableSubject = getSubject({
-    page: droppable.subject.page,
+    pageX: droppable.subject.pageX,
+    pageY: droppable.subject.pageY,
     axis: droppable.axis,
     frame: newFrame,
     // cleared

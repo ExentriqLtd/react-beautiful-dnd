@@ -2,14 +2,20 @@
 import type { Rect, Position } from 'css-box-model';
 
 type Args = {|
-  container: Rect,
+  containerY: Rect,
+  containerX: Rect,
   subject: Rect,
   proposedScroll: Position,
 |};
 
-export default ({ container, subject, proposedScroll }: Args): ?Position => {
-  const isTooBigVertically: boolean = subject.height > container.height;
-  const isTooBigHorizontally: boolean = subject.width > container.width;
+export default ({
+  containerX,
+  containerY,
+  subject,
+  proposedScroll,
+}: Args): ?Position => {
+  const isTooBigVertically: boolean = subject.height > containerY.height;
+  const isTooBigHorizontally: boolean = subject.width > containerX.width;
 
   // not too big on any axis
   if (!isTooBigHorizontally && !isTooBigVertically) {

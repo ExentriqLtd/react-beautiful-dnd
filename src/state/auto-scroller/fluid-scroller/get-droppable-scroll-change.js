@@ -29,7 +29,8 @@ export default ({
 
   const scroll: ?Position = getScroll({
     dragStartTime,
-    container: frame.pageMarginBox,
+    containerX: frame.pageXMarginBox,
+    containerY: frame.pageYMarginBox,
     subject,
     center,
     shouldUseTimeDampening,

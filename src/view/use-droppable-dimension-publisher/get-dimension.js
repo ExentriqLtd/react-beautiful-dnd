@@ -100,25 +100,34 @@ export default ({
   isCombineEnabled,
   shouldClipSubject,
 }: Args): DroppableDimension => {
-  const closestScrollable: ?Element = env.closestScrollable;
-  const client: BoxModel = getClient(ref, closestScrollable);
-  const page: BoxModel = withScroll(client, windowScroll);
+  const closestScrollableX: ?Element = env.closestScrollableX;
+  const closestScrollableY: ?Element = env.closestScrollableY;
+  const clientX: BoxModel = getClient(ref, closestScrollableX);
+  const clientY: BoxModel = getClient(ref, closestScrollableY);
+  const pageX: BoxModel = withScroll(clientX, windowScroll);
+  const pageY: BoxModel = withScroll(clientY, windowScroll);
 
   const closest: ?Closest = (() => {
-    if (!closestScrollable) {
+    if (!closestScrollableX || !closestScrollableY) {
       return null;
     }
 
-    const frameClient: BoxModel = getBox(closestScrollable);
+    const frameClientX: BoxModel = getBox(closestScrollableX);
+    const frameClientY: BoxModel = getBox(closestScrollableY);
     const scrollSize: ScrollSize = {
-      scrollHeight: closestScrollable.scrollHeight,
-      scrollWidth: closestScrollable.scrollWidth,
+      scrollHeight: closestScrollableY.scrollHeight,
+      scrollWidth: closestScrollableX.scrollWidth,
     };
 
     return {
-      client: frameClient,
-      page: withScroll(frameClient, windowScroll),
-      scroll: getScroll(closestScrollable),
+      clientX: frameClientX,
+      clientY: frameClientY,
+      pageX: withScroll(frameClientX, windowScroll),
+      pageY: withScroll(frameClientY, windowScroll),
+      scroll: {
+        x: getScroll(closestScrollableX).x,
+        y: getScroll(closestScrollableY).y,
+      },
       scrollSize,
       shouldClipSubject,
     };
@@ -130,8 +139,10 @@ export default ({
     isCombineEnabled,
     isFixedOnPage: env.isFixedOnPage,
     direction,
-    client,
-    page,
+    clientX,
+    clientY,
+    pageX,
+    pageY,
     closest,
   });
 

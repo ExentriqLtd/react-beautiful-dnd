@@ -39,7 +39,8 @@ export default (
   };
 
   const subject: DroppableSubject = getSubject({
-    page: droppable.subject.page,
+    pageX: droppable.subject.pageX,
+    pageY: droppable.subject.pageY,
     withPlaceholder: droppable.subject.withPlaceholder,
     axis: droppable.axis,
     frame,

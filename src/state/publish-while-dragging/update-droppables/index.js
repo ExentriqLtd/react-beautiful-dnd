@@ -72,46 +72,77 @@ export default ({
         ? removePlaceholder(raw)
         : raw;
 
-      const oldClient: BoxModel = dimension.client;
-      const newClient: BoxModel = provided.client;
+      const oldClientX: BoxModel = dimension.clientX;
+      const newClientX: BoxModel = provided.clientX;
+      const oldClientY: BoxModel = dimension.clientY;
+      const newClientY: BoxModel = provided.clientY;
       const oldScrollable: Scrollable = getFrame(dimension);
       const newScrollable: Scrollable = getFrame(provided);
 
       // Extra checks to help with development
       if (process.env.NODE_ENV !== 'production') {
-        throwIfSpacingChange(dimension.client, provided.client);
+        throwIfSpacingChange(dimension.clientX, provided.clientX);
         throwIfSpacingChange(
-          oldScrollable.frameClient,
-          newScrollable.frameClient,
+          oldScrollable.frameClientX,
+          newScrollable.frameClientX,
         );
 
         const isFrameEqual: boolean =
-          oldScrollable.frameClient.borderBox.height ===
-            newScrollable.frameClient.borderBox.height &&
-          oldScrollable.frameClient.borderBox.width ===
-            newScrollable.frameClient.borderBox.width;
+          oldScrollable.frameClientX.borderBox.height ===
+            newScrollable.frameClientX.borderBox.height &&
+          oldScrollable.frameClientX.borderBox.width ===
+            newScrollable.frameClientX.borderBox.width;
 
         invariant(
           isFrameEqual,
           'The width and height of your Droppable scroll container cannot change when adding or removing Draggables during a drag',
         );
+        throwIfSpacingChange(dimension.clientY, provided.clientY);
+        throwIfSpacingChange(
+          oldScrollable.frameClientY,
+          newScrollable.frameClientY,
+        );
+
+        const isFrameEqual2: boolean =
+          oldScrollable.frameClientY.borderBox.height ===
+            newScrollable.frameClientY.borderBox.height &&
+          oldScrollable.frameClientY.borderBox.width ===
+            newScrollable.frameClientY.borderBox.width;
+
+        invariant(
+          isFrameEqual2,
+          'The width and height of your Droppable scroll container cannot change when adding or removing Draggables during a drag',
+        );
       }
 
-      const client: BoxModel = createBox({
+      const clientX: BoxModel = createBox({
         borderBox: adjustBorderBoxSize(
           dimension.axis,
-          oldClient.borderBox,
-          newClient.borderBox,
+          oldClientX.borderBox,
+          newClientX.borderBox,
         ),
-        margin: oldClient.margin,
-        border: oldClient.border,
-        padding: oldClient.padding,
+        margin: oldClientX.margin,
+        border: oldClientX.border,
+        padding: oldClientX.padding,
+      });
+
+      const clientY: BoxModel = createBox({
+        borderBox: adjustBorderBoxSize(
+          dimension.axis,
+          oldClientY.borderBox,
+          newClientY.borderBox,
+        ),
+        margin: oldClientY.margin,
+        border: oldClientY.border,
+        padding: oldClientY.padding,
       });
 
       const closest: Closest = {
         // not allowing a change to the scrollable frame size during a drag
-        client: oldScrollable.frameClient,
-        page: withScroll(oldScrollable.frameClient, viewport.scroll.initial),
+        clientX: oldScrollable.frameClientX,
+        clientY: oldScrollable.frameClientY,
+        pageX: withScroll(oldScrollable.frameClientX, viewport.scroll.initial),
+        pageY: withScroll(oldScrollable.frameClientY, viewport.scroll.initial),
         shouldClipSubject: oldScrollable.shouldClipSubject,
         // the scroll size can change during a drag
         scrollSize: newScrollable.scrollSize,
@@ -125,8 +156,10 @@ export default ({
         isCombineEnabled: provided.isCombineEnabled,
         isFixedOnPage: provided.isFixedOnPage,
         direction: provided.axis.direction,
-        client,
-        page: withScroll(client, viewport.scroll.initial),
+        clientX,
+        clientY,
+        pageX: withScroll(clientX, viewport.scroll.initial),
+        pageY: withScroll(clientY, viewport.scroll.initial),
         closest,
       });
 

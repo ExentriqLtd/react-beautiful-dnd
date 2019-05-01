@@ -31,33 +31,49 @@ const increase = (
   return target;
 };
 
-const clip = (target: Spacing, frame: ?Scrollable): ?Rect => {
+type AxisS = 'x' | 'y';
+
+const clip = (target: Spacing, frame: ?Scrollable, axis: AxisS): ?Rect => {
   if (frame && frame.shouldClipSubject) {
-    return executeClip(frame.pageMarginBox, target);
+    return executeClip(frame[`page${axis.toUpperCase()}MarginBox`], target);
   }
   return getRect(target);
 };
 
 type Args = {|
-  page: BoxModel,
+  pageX: BoxModel,
+  pageY: BoxModel,
   withPlaceholder: ?PlaceholderInSubject,
   axis: Axis,
   frame: ?Scrollable,
 |};
 
 export default ({
-  page,
+  pageY,
+  pageX,
   withPlaceholder,
   axis,
   frame,
 }: Args): DroppableSubject => {
-  const scrolled: Spacing = scroll(page.marginBox, frame);
-  const increased: Spacing = increase(scrolled, axis, withPlaceholder);
-  const clipped: ?Rect = clip(increased, frame);
+  const scrolledX: Spacing = scroll(pageX.marginBox, frame);
+  const scrolledY: Spacing = scroll(pageY.marginBox, frame);
+  const increasedX: Spacing = increase(scrolledX, axis, withPlaceholder);
+  const increasedY: Spacing = increase(scrolledY, axis, withPlaceholder);
+  const clippedX: ?Rect = clip(increasedX, frame, 'x');
+  const clippedY: ?Rect = clip(increasedY, frame, 'y');
 
   return {
-    page,
+    pageX,
+    pageY,
     withPlaceholder,
-    active: clipped,
+    active:
+      clippedY &&
+      clippedX &&
+      getRect({
+        top: clippedY.top,
+        bottom: clippedY.bottom,
+        left: clippedY.left,
+        right: clippedY.right,
+      }),
   };
 };
